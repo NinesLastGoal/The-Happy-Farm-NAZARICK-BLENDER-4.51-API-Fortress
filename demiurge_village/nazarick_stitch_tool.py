@@ -189,9 +189,9 @@ class MESH_OT_NazarickCreateStitches(bpy.types.Operator):
         
         # Calculate edge normal (average of adjacent face normals)
         edge_normal = Vector((0, 0, 1))
-        if edge.faces:
+        if edge.link_faces:
             edge_normal = Vector((0, 0, 0))
-            for face in edge.faces:
+            for face in edge.link_faces:
                 edge_normal += face.normal
             edge_normal = edge_normal.normalized()
         
@@ -320,7 +320,7 @@ class MESH_OT_NazarickRemoveStitches(bpy.types.Operator):
         
         if self.remove_mode == 'LOOSE_EDGES':
             # Remove edges that are not part of any face
-            edges_to_remove = [edge for edge in bm.edges if not edge.faces]
+            edges_to_remove = [edge for edge in bm.edges if not edge.link_faces]
             for edge in edges_to_remove:
                 bm.edges.remove(edge)
                 removed_count += 1
@@ -335,7 +335,7 @@ class MESH_OT_NazarickRemoveStitches(bpy.types.Operator):
         elif self.remove_mode == 'ALL_STITCHES':
             # Remove very short edges (likely stitches)
             threshold = 0.1  # Edges shorter than this are considered stitches
-            edges_to_remove = [edge for edge in bm.edges if edge.calc_length() < threshold and not edge.faces]
+            edges_to_remove = [edge for edge in bm.edges if edge.calc_length() < threshold and not edge.link_faces]
             for edge in edges_to_remove:
                 bm.edges.remove(edge)
                 removed_count += 1
