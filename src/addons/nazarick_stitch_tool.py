@@ -124,6 +124,15 @@ class MESH_OT_NazarickCreateStitches(bpy.types.Operator):
     def execute(self, context):
         obj = context.active_object
         
+        # Enhanced validation for Supreme Overlord standards
+        if not obj or obj.type != 'MESH':
+            self.report({'ERROR'}, "Active object must be a mesh")
+            return {'CANCELLED'}
+            
+        if obj.mode != 'EDIT':
+            self.report({'ERROR'}, "Object must be in Edit Mode")
+            return {'CANCELLED'}
+        
         # Validate vertex group
         if not self.vertex_group or self.vertex_group not in obj.vertex_groups:
             self.report({'ERROR'}, "Please select a valid vertex group")
@@ -132,8 +141,15 @@ class MESH_OT_NazarickCreateStitches(bpy.types.Operator):
         # Get vertex group index
         vg_index = obj.vertex_groups[self.vertex_group].index
         
-        # Get bmesh
-        bm = bmesh.from_edit_mesh(obj.data)
+        # Get bmesh with proper error handling
+        try:
+            bm = bmesh.from_edit_mesh(obj.data)
+            if not bm.is_valid:
+                self.report({'ERROR'}, "Invalid mesh data")
+                return {'CANCELLED'}
+        except Exception as e:
+            self.report({'ERROR'}, f"Failed to access mesh data: {str(e)}")
+            return {'CANCELLED'}
         
         # Ensure we have vertex group layer
         if not bm.verts.layers.deform:
@@ -166,14 +182,22 @@ class MESH_OT_NazarickCreateStitches(bpy.types.Operator):
             self.report({'ERROR'}, f"No edges found connecting vertices in group '{self.vertex_group}'")
             return {'CANCELLED'}
         
-        # Create stitches
+        # Create stitches with error handling
         stitch_count = 0
         
-        for edge in group_edges:
-            stitch_count += self._create_stitches_on_edge(bm, edge, obj)
-        
-        # Update mesh
-        bmesh.update_edit_mesh(obj.data)
+        try:
+            for edge in group_edges:
+                stitch_count += self._create_stitches_on_edge(bm, edge, obj)
+            
+            # Update mesh with validation
+            bmesh.update_edit_mesh(obj.data)
+            
+            # Force update
+            context.view_layer.update()
+            
+        except Exception as e:
+            self.report({'ERROR'}, f"Failed to create stitches: {str(e)}")
+            return {'CANCELLED'}
         
         self.report({'INFO'}, f"Created {stitch_count} stitches along {len(group_edges)} edges")
         return {'FINISHED'}
@@ -314,37 +338,68 @@ class MESH_OT_NazarickRemoveStitches(bpy.types.Operator):
 
     def execute(self, context):
         obj = context.active_object
-        bm = bmesh.from_edit_mesh(obj.data)
+        
+        # Enhanced validation
+        if not obj or obj.type != 'MESH':
+            self.report({'ERROR'}, "Active object must be a mesh")
+            return {'CANCELLED'}
+            
+        if obj.mode != 'EDIT':
+            self.report({'ERROR'}, "Object must be in Edit Mode")
+            return {'CANCELLED'}
+        
+        # Get bmesh with error handling
+        try:
+            bm = bmesh.from_edit_mesh(obj.data)
+            if not bm.is_valid:
+                self.report({'ERROR'}, "Invalid mesh data")
+                return {'CANCELLED'}
+        except Exception as e:
+            self.report({'ERROR'}, f"Failed to access mesh data: {str(e)}")
+            return {'CANCELLED'}
         
         removed_count = 0
         
-        if self.remove_mode == 'LOOSE_EDGES':
-            # Remove edges that are not part of any face
-            edges_to_remove = [edge for edge in bm.edges if not edge.link_faces]
-            for edge in edges_to_remove:
-                bm.edges.remove(edge)
-                removed_count += 1
-                
-        elif self.remove_mode == 'SELECTED':
-            # Remove selected edges
-            selected_edges = [edge for edge in bm.edges if edge.select]
-            for edge in selected_edges:
-                bm.edges.remove(edge)
-                removed_count += 1
-                
-        elif self.remove_mode == 'ALL_STITCHES':
-            # Remove very short edges (likely stitches)
-            threshold = 0.1  # Edges shorter than this are considered stitches
-            edges_to_remove = [edge for edge in bm.edges if edge.calc_length() < threshold and not edge.link_faces]
-            for edge in edges_to_remove:
-                bm.edges.remove(edge)
-                removed_count += 1
-        
-        # Clean up loose vertices
-        bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.0001)
-        
-        # Update mesh
-        bmesh.update_edit_mesh(obj.data)
+        try:
+            if self.remove_mode == 'LOOSE_EDGES':
+                # Remove edges that are not part of any face (enhanced validation)
+                edges_to_remove = [edge for edge in bm.edges if not edge.link_faces and edge.is_valid]
+                for edge in edges_to_remove:
+                    if edge.is_valid:  # Double-check before removal
+                        bm.edges.remove(edge)
+                        removed_count += 1
+                        
+            elif self.remove_mode == 'SELECTED':
+                # Remove selected edges (enhanced validation)
+                selected_edges = [edge for edge in bm.edges if edge.select and edge.is_valid]
+                for edge in selected_edges:
+                    if edge.is_valid:  # Double-check before removal
+                        bm.edges.remove(edge)
+                        removed_count += 1
+                        
+            elif self.remove_mode == 'ALL_STITCHES':
+                # Remove very short edges (likely stitches) with enhanced validation
+                threshold = 0.1  # Edges shorter than this are considered stitches
+                edges_to_remove = [edge for edge in bm.edges 
+                                 if edge.is_valid and edge.calc_length() < threshold and not edge.link_faces]
+                for edge in edges_to_remove:
+                    if edge.is_valid:  # Double-check before removal
+                        bm.edges.remove(edge)
+                        removed_count += 1
+            
+            # Clean up loose vertices with error handling
+            if removed_count > 0:
+                bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.0001)
+            
+            # Update mesh
+            bmesh.update_edit_mesh(obj.data)
+            
+            # Force update
+            context.view_layer.update()
+            
+        except Exception as e:
+            self.report({'ERROR'}, f"Failed to remove stitches: {str(e)}")
+            return {'CANCELLED'}
         
         self.report({'INFO'}, f"Removed {removed_count} stitch elements")
         return {'FINISHED'}

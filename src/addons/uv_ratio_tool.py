@@ -64,8 +64,24 @@ class UV_OT_TotalUV3DRatio(bpy.types.Operator):
         start_time = time.time()
         obj = context.active_object
         
-        # Get bmesh from edit mode mesh
-        bm = bmesh.from_edit_mesh(obj.data)
+        # Enhanced validation for Supreme Overlord standards
+        if not obj or obj.type != 'MESH':
+            self.report({'ERROR'}, "Active object must be a mesh")
+            return {'CANCELLED'}
+            
+        if obj.mode != 'EDIT':
+            self.report({'ERROR'}, "Object must be in Edit Mode")
+            return {'CANCELLED'}
+        
+        # Get bmesh from edit mode mesh with error handling
+        try:
+            bm = bmesh.from_edit_mesh(obj.data)
+            if not bm.is_valid:
+                self.report({'ERROR'}, "Invalid mesh data")
+                return {'CANCELLED'}
+        except Exception as e:
+            self.report({'ERROR'}, f"Failed to access mesh data: {str(e)}")
+            return {'CANCELLED'}
         
         # Ensure we have UV data
         if not bm.loops.layers.uv:
@@ -73,30 +89,55 @@ class UV_OT_TotalUV3DRatio(bpy.types.Operator):
             return {'CANCELLED'}
             
         uv_layer = bm.loops.layers.uv.active
+        if not uv_layer:
+            self.report({'ERROR'}, "No active UV layer found")
+            return {'CANCELLED'}
         
         # Calculate areas - prioritize selected faces, fallback to all faces
-        selected_faces = [face for face in bm.faces if face.select]
-        faces_to_process = selected_faces if selected_faces else bm.faces
+        selected_faces = [face for face in bm.faces if face.select and face.is_valid]
+        faces_to_process = selected_faces if selected_faces else [face for face in bm.faces if face.is_valid]
+        
+        if not faces_to_process:
+            self.report({'ERROR'}, "No valid faces found to process")
+            return {'CANCELLED'}
         
         total_3d = 0.0
         total_uv = 0.0
         face_count = 0
+        epsilon = 1e-10  # Numerical precision threshold
         
-        for face in faces_to_process:
-            area_3d = face_area_3d(face)
-            area_uv = face_area_uv(face, uv_layer)
-            
-            total_3d += area_3d
-            total_uv += area_uv
-            face_count += 1
-            
-        # Calculate ratio and interpretation
-        if total_3d > 0:
+        try:
+            for face in faces_to_process:
+                area_3d = face_area_3d(face)
+                area_uv = face_area_uv(face, uv_layer)
+                
+                # Validate areas are non-negative and finite
+                if area_3d < 0 or area_uv < 0 or not (math.isfinite(area_3d) and math.isfinite(area_uv)):
+                    continue  # Skip invalid faces
+                
+                total_3d += area_3d
+                total_uv += area_uv
+                face_count += 1
+                
+        except Exception as e:
+            self.report({'ERROR'}, f"Error calculating areas: {str(e)}")
+            return {'CANCELLED'}
+        
+        # Calculate ratio and interpretation with numerical precision
+        if total_3d > epsilon:  # Use epsilon instead of zero comparison
             ratio = total_uv / total_3d
             
-            # Create human-readable interpretation
-            if 0.99 <= ratio <= 1.01:
+            # Validate ratio is finite
+            if not math.isfinite(ratio):
+                self.report({'ERROR'}, "Invalid ratio calculated (infinite or NaN)")
+                return {'CANCELLED'}
+            
+            # Create human-readable interpretation with numerical precision
+            epsilon = 1e-6  # Precision threshold for floating point comparisons
+            if abs(ratio - 1.0) < epsilon:
                 interpretation = "PERFECT - 1:1 UV to 3D ratio"
+            elif 0.99 <= ratio <= 1.01:
+                interpretation = "PERFECT - 1:1 UV to 3D ratio (within tolerance)"
             elif ratio > 1.5:
                 interpretation = "UVs are MUCH LARGER than needed (stretched texture)"
             elif ratio > 1.05:
@@ -120,7 +161,7 @@ class UV_OT_TotalUV3DRatio(bpy.types.Operator):
             context.scene.nazarick_uv_ratio_result = result
             context.scene.nazarick_uv_ratio_details = details
         else:
-            self.report({'ERROR'}, "Could not calculate area (3D area is zero)")
+            self.report({'ERROR'}, "Could not calculate area (3D area is zero or invalid)")
             context.scene.nazarick_uv_ratio_result = "Error: No valid area found"
             context.scene.nazarick_uv_ratio_details = "Please check your mesh."
             return {'CANCELLED'}
