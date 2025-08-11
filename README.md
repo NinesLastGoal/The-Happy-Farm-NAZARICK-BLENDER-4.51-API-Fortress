@@ -23,10 +23,13 @@ Inspired by the wisdom shared in **Alexandre Albisser's Sewing Toolbox**, where 
 ## ✨ Features
 
 ### 🎯 **Core Functionality**
+- **Dual-Panel Interface**: Identical panels available in both UV Editor and 3D Viewport sidebars
 - **Precise UV/3D Ratio Calculation**: Uses advanced triangulation algorithms to measure exact area ratios
+- **Selection-Aware Calculations**: Works with selected faces, edges, or entire mesh (automatically detects scope)
+- **Unified UI Experience**: Changes in one panel are instantly reflected in the other
 - **Intelligent Interpretation**: Provides clear guidance on whether your UVs are perfect, stretched, or compressed
 - **One-Click UV Scaling**: Automatically adjusts UV coordinates to achieve the perfect 1:1 ratio
-- **Real-time Feedback**: Displays calculation time, face count, and detailed area measurements
+- **Real-time Feedback**: Displays calculation time, face count, scope (selected vs all), and detailed area measurements
 - **Non-destructive Workflow**: All operations can be undone with Blender's standard undo system
 
 ### 🛡️ **Technical Excellence**
@@ -36,10 +39,13 @@ Inspired by the wisdom shared in **Alexandre Albisser's Sewing Toolbox**, where 
 - **Error Handling**: Graceful handling of edge cases and invalid geometry
 
 ### 👑 **User Experience**
-- **Nazarick-themed Interface**: Beautiful UI panels in the UV Editor
+- **Dual-Location Access**: Available in both UV Editor and 3D Viewport for maximum convenience
+- **Nazarick-themed Interface**: Beautiful UI panels with consistent appearance across both locations
 - **Clear Visual Feedback**: Color-coded results and intuitive icons
-- **Comprehensive Results**: Detailed breakdown of calculations and recommendations
+- **Selection Context Awareness**: Automatically detects and processes selected geometry or entire mesh
+- **Comprehensive Results**: Detailed breakdown of calculations with scope indication (selected vs all faces)
 - **Seamless Integration**: Works perfectly within Blender's native UV editing workflow
+- **Synchronized Updates**: Changes made in one panel are instantly visible in the other
 
 ---
 
@@ -70,10 +76,11 @@ Inspired by the wisdom shared in **Alexandre Albisser's Sewing Toolbox**, where 
    - The add-on is now active!
 
 4. **Verify Installation**
-   - Switch to the **UV Editing** workspace
+   - Switch to the **UV Editing** workspace OR stay in **Layout/Modeling** workspace
    - Select a mesh object and enter **Edit Mode**
    - Press `N` to open the sidebar
    - Look for the **"Nazarick UV Tools"** panel 🏰
+   - The panel appears in BOTH the UV Editor and 3D Viewport sidebars!
 
 ---
 
@@ -91,9 +98,10 @@ Inspired by the wisdom shared in **Alexandre Albisser's Sewing Toolbox**, where 
 
 #### 2. **Access the Tool**
 ```
-• Open the sidebar (N key)
-• Find "Nazarick UV Tools" panel
+• Open the sidebar (N key) in either UV Editor OR 3D Viewport
+• Find "Nazarick UV Tools" panel (available in both locations)
 • Click "Calculate UV/3D Ratio"
+• Results appear instantly in BOTH panels simultaneously
 ```
 
 #### 3. **Interpret Results**
@@ -120,8 +128,15 @@ The tool provides several ratio interpretations:
 - **3D Area**: Surface area of your mesh in 3D space
 - **UV Area**: Area covered by UV coordinates in UV space
 - **Ratio**: UV Area ÷ 3D Area
+- **Scope**: Shows whether calculation used "selected faces" or "all faces"
 - **Face Count**: Number of faces processed
 - **Calculation Time**: Performance measurement
+
+#### **Selection-Based Workflow**
+1. **Whole Mesh**: No selection = calculates entire mesh
+2. **Selected Faces**: Select specific faces = calculates only selected geometry
+3. **Mixed Selection**: Works with any face selection combination
+4. **Real-time Updates**: Both panels update simultaneously when you recalculate
 
 #### **Best Practices**
 1. **Clean Geometry**: Ensure manifold geometry for accurate calculations
