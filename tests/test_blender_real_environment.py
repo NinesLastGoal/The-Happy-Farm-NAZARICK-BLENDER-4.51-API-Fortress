@@ -46,7 +46,7 @@ def test_addon_loading():
     
     try:
         # Get the addon file path
-        addon_path = "uv_total_ratio_compare_Version2.py"
+        addon_path = "../src/addons/uv_ratio_tool.py"
         if not os.path.exists(addon_path):
             print(f"❌ Addon file not found: {addon_path}")
             return False
