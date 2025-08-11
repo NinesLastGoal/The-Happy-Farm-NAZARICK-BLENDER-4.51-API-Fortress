@@ -1,0 +1,25 @@
+# Testing Requirements for UV3D Ratio Blender Addon
+# For Blender 4.5 Development and Testing
+#
+# These are the Python packages needed for running tests outside of Blender
+# Note: When running inside Blender, these are provided by Blender's bundled Python
+
+# Core testing framework (usually included with Python)
+# unittest  # Built-in with Python
+
+# For advanced mocking if needed
+# mock  # Built-in with Python 3.3+
+
+# Documentation and code quality (optional)
+# pylint>=2.15.0
+# flake8>=4.0.0
+# black>=22.0.0
+
+# Note: This addon is designed for Blender 4.5 which includes:
+# - Python 3.11.x (bundled with Blender)
+# - bpy module (Blender Python API)
+# - bmesh module (Blender mesh editing)
+# - mathutils module (Blender mathematical utilities)
+#
+# For testing purposes, we mock these Blender-specific modules
+# since they are not available outside of Blender.
