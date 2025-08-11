@@ -92,7 +92,7 @@ class TestAddonStructure(unittest.TestCase):
     
     def setUp(self):
         """Load the addon file for testing"""
-        with open('uv_total_ratio_compare_Version2.py', 'r') as f:
+        with open('../src/addons/uv_ratio_tool.py', 'r') as f:
             self.addon_code = f.read()
         self.ast_tree = ast.parse(self.addon_code)
     
@@ -154,7 +154,7 @@ class TestMathematicalFunctions(unittest.TestCase):
     def setUp(self):
         """Set up isolated test environment for math functions"""
         # Extract just the mathematical functions for testing
-        with open('uv_total_ratio_compare_Version2.py', 'r') as f:
+        with open('../src/addons/uv_ratio_tool.py', 'r') as f:
             content = f.read()
         
         # Extract face_area_3d function
@@ -249,7 +249,7 @@ class TestBlenderIntegration(unittest.TestCase):
     
     def test_operator_class_names(self):
         """Test that operator classes have correct naming convention"""
-        with open('uv_total_ratio_compare_Version2.py', 'r') as f:
+        with open('../src/addons/uv_ratio_tool.py', 'r') as f:
             content = f.read()
         
         # Check for operator naming conventions
@@ -262,7 +262,7 @@ class TestBlenderIntegration(unittest.TestCase):
     
     def test_panel_class_names(self):
         """Test that panel classes have correct naming convention"""
-        with open('uv_total_ratio_compare_Version2.py', 'r') as f:
+        with open('../src/addons/uv_ratio_tool.py', 'r') as f:
             content = f.read()
         
         # Check for panel naming conventions
@@ -275,7 +275,7 @@ class TestBlenderIntegration(unittest.TestCase):
     
     def test_mixin_class_present(self):
         """Test that the mixin class is properly defined"""
-        with open('uv_total_ratio_compare_Version2.py', 'r') as f:
+        with open('../src/addons/uv_ratio_tool.py', 'r') as f:
             content = f.read()
         
         self.assertIn('class NazarickRatioPanelMixin:', content)
@@ -283,7 +283,7 @@ class TestBlenderIntegration(unittest.TestCase):
     
     def test_classes_tuple_definition(self):
         """Test that classes tuple is properly defined"""
-        with open('uv_total_ratio_compare_Version2.py', 'r') as f:
+        with open('../src/addons/uv_ratio_tool.py', 'r') as f:
             content = f.read()
         
         self.assertIn('classes = (', content)
@@ -310,7 +310,7 @@ class TestAddonCompatibility(unittest.TestCase):
     
     def test_addon_metadata(self):
         """Test addon metadata for Blender compatibility"""
-        with open('uv_total_ratio_compare_Version2.py', 'r') as f:
+        with open('../src/addons/uv_ratio_tool.py', 'r') as f:
             content = f.read()
         
         # Check for required metadata
@@ -324,7 +324,7 @@ class TestAddonCompatibility(unittest.TestCase):
     
     def test_import_requirements(self):
         """Test that required imports are present"""
-        with open('uv_total_ratio_compare_Version2.py', 'r') as f:
+        with open('../src/addons/uv_ratio_tool.py', 'r') as f:
             content = f.read()
         
         # Check for required imports
@@ -338,7 +338,7 @@ class TestCodeQuality(unittest.TestCase):
     
     def test_function_docstrings(self):
         """Test that key functions have docstrings"""
-        with open('uv_total_ratio_compare_Version2.py', 'r') as f:
+        with open('../src/addons/uv_ratio_tool.py', 'r') as f:
             content = f.read()
         
         # Check for function docstrings
@@ -347,7 +347,7 @@ class TestCodeQuality(unittest.TestCase):
     
     def test_class_docstrings(self):
         """Test that classes have appropriate docstrings"""
-        with open('uv_total_ratio_compare_Version2.py', 'r') as f:
+        with open('../src/addons/uv_ratio_tool.py', 'r') as f:
             content = f.read()
         
         # Check for class documentation
@@ -355,7 +355,7 @@ class TestCodeQuality(unittest.TestCase):
     
     def test_no_obvious_syntax_errors(self):
         """Test that there are no obvious syntax issues"""
-        with open('uv_total_ratio_compare_Version2.py', 'r') as f:
+        with open('../src/addons/uv_ratio_tool.py', 'r') as f:
             content = f.read()
         
         # Check for common syntax issues

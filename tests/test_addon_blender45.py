@@ -29,7 +29,7 @@ from pathlib import Path
 def test_python_syntax():
     """Test Python syntax is valid"""
     try:
-        with open('uv_total_ratio_compare_Version2.py', 'r') as f:
+        with open('../src/addons/uv_ratio_tool.py', 'r') as f:
             code = f.read()
         ast.parse(code)
         return True, "✅ Python syntax is valid"
@@ -41,7 +41,7 @@ def test_python_syntax():
 def test_blender_45_api_compatibility():
     """Comprehensive Blender 4.5 API compatibility test - Enhanced by Demiurge"""
     try:
-        with open('uv_total_ratio_compare_Version2.py', 'r') as f:
+        with open('../src/addons/uv_ratio_tool.py', 'r') as f:
             content = f.read()
         
         checks = []
@@ -104,7 +104,7 @@ def test_blender_45_api_compatibility():
 def test_deprecated_api_calls():
     """Check for deprecated API calls that don't work in Blender 4.5 - Enhanced by Demiurge"""
     try:
-        with open('uv_total_ratio_compare_Version2.py', 'r') as f:
+        with open('../src/addons/uv_ratio_tool.py', 'r') as f:
             content = f.read()
         
         checks = []
@@ -164,7 +164,7 @@ def test_deprecated_api_calls():
 def test_blender_45_specific_features():
     """Test Blender 4.5 specific features and requirements - Enhanced by Demiurge"""
     try:
-        with open('uv_total_ratio_compare_Version2.py', 'r') as f:
+        with open('../src/addons/uv_ratio_tool.py', 'r') as f:
             content = f.read()
         
         checks = []
@@ -221,7 +221,7 @@ def test_blender_45_specific_features():
 def test_class_structure():
     """Test addon class structure"""
     try:
-        with open('uv_total_ratio_compare_Version2.py', 'r') as f:
+        with open('../src/addons/uv_ratio_tool.py', 'r') as f:
             content = f.read()
         
         required_classes = [
@@ -328,10 +328,10 @@ def test_code_compilation():
     """Test that code compiles without imports"""
     try:
         # Test compilation by trying to compile the code
-        with open('uv_total_ratio_compare_Version2.py', 'r') as f:
+        with open('../src/addons/uv_ratio_tool.py', 'r') as f:
             code = f.read()
         
-        compile(code, 'uv_total_ratio_compare_Version2.py', 'exec')
+        compile(code, '../src/addons/uv_ratio_tool.py', 'exec')
         return True, "✅ Code compiles successfully"
     except SyntaxError as e:
         return False, f"❌ Compilation error: {e}"

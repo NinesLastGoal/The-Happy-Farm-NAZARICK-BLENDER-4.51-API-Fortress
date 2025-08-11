@@ -211,48 +211,61 @@ class MESH_OT_NazarickShapekeyBatchProcess(bpy.types.Operator):
         mesh_objects = [obj for obj in context.selected_objects if obj.type == 'MESH']
         processed_count = 0
         
-        for obj in mesh_objects:
-            if not obj.data.shape_keys:
-                continue
-                
-            context.view_layer.objects.active = obj
-            
-            if self.operation == 'RESET_VALUES':
-                key_blocks = obj.data.shape_keys.key_blocks
-                for key_block in key_blocks:
-                    if key_block.name != "Basis":
-                        key_block.value = 0.0
-                processed_count += 1
-                
-            elif self.operation == 'VALIDATE':
-                # Just count objects with shapekeys for validation
-                processed_count += 1
-                
-            elif self.operation == 'REMOVE_EMPTY':
-                # Remove shapekeys that have minimal deformation
-                key_blocks = obj.data.shape_keys.key_blocks
-                removed_keys = []
-                
-                for i in range(len(key_blocks) - 1, 0, -1):  # Skip Basis
-                    key_block = key_blocks[i]
-                    # Simple check: if all vertices are very close to basis
-                    basis_data = key_blocks[0].data
-                    key_data = key_block.data
+        # Store original active object for restoration
+        original_active = context.view_layer.objects.active
+        
+        try:
+            for obj in mesh_objects:
+                if not obj.data.shape_keys:
+                    continue
                     
-                    max_distance = 0.0
-                    for j, (basis_vert, key_vert) in enumerate(zip(basis_data, key_data)):
-                        distance = (Vector(basis_vert.co) - Vector(key_vert.co)).length
-                        max_distance = max(max_distance, distance)
-                    
-                    # If max deformation is less than 0.001 units, consider it empty
-                    if max_distance < 0.001:
-                        removed_keys.append(key_block.name)
-                        obj.shape_key_remove(key_block)
+                # Thread safety: ensure single active object processing
+                context.view_layer.objects.active = obj
+                context.view_layer.update()  # Force context update
                 
-                if removed_keys:
-                    print(f"Removed empty shapekeys from {obj.name}: {', '.join(removed_keys)}")
+                if self.operation == 'RESET_VALUES':
+                    key_blocks = obj.data.shape_keys.key_blocks
+                    for key_block in key_blocks:
+                        if key_block.name != "Basis":
+                            key_block.value = 0.0
+                    processed_count += 1
                     
-                processed_count += 1
+                elif self.operation == 'VALIDATE':
+                    # Just count objects with shapekeys for validation
+                    processed_count += 1
+                    
+                elif self.operation == 'REMOVE_EMPTY':
+                    # Remove shapekeys that have minimal deformation
+                    key_blocks = obj.data.shape_keys.key_blocks
+                    removed_keys = []
+                    
+                    # Safe iteration: work backwards to avoid index issues
+                    for i in range(len(key_blocks) - 1, 0, -1):  # Skip Basis
+                        key_block = key_blocks[i]
+                        # Simple check: if all vertices are very close to basis
+                        basis_data = key_blocks[0].data
+                        key_data = key_block.data
+                        
+                        max_distance = 0.0
+                        for j, (basis_vert, key_vert) in enumerate(zip(basis_data, key_data)):
+                            distance = (Vector(basis_vert.co) - Vector(key_vert.co)).length
+                            max_distance = max(max_distance, distance)
+                        
+                        # If max deformation is less than 0.001 units, consider it empty
+                        if max_distance < 0.001:
+                            removed_keys.append(key_block.name)
+                            obj.shape_key_remove(key_block)
+                    
+                    if removed_keys:
+                        print(f"Removed empty shapekeys from {obj.name}: {', '.join(removed_keys)}")
+                        
+                    processed_count += 1
+                    
+        finally:
+            # Restore original active object
+            if original_active:
+                context.view_layer.objects.active = original_active
+                context.view_layer.update()
         
         self.report({'INFO'}, f"Batch operation '{self.operation}' completed on {processed_count} objects")
         return {'FINISHED'}

@@ -16,7 +16,9 @@ For the Glory of the Great Tomb of Nazarick! 🏰
 import subprocess
 import sys
 import os
-from fortress_banner import display_fortress_banner, display_testing_header
+# Add parent directory to path to import from src
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+from src.utils.fortress_banner import display_fortress_banner, display_testing_header
 
 def main():
     """Run all fortress validation tests"""

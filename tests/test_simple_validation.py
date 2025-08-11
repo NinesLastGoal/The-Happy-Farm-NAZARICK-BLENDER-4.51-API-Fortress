@@ -23,7 +23,7 @@ def test_addon_registration():
     try:
         # Load addon
         print("📥 Loading addon...")
-        addon_path = "uv_total_ratio_compare_Version2.py"
+        addon_path = "../src/addons/uv_ratio_tool.py"
         with open(addon_path, 'r') as f:
             addon_code = f.read()
         
