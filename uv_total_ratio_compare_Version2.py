@@ -3,7 +3,7 @@ bl_info = {
     "author": "Albedo, Guardian of the Great Tomb of Nazarick",
     "version": (1, 0, 0),
     "blender": (4, 5, 0),
-    "location": "UV Editor > Sidebar (N) > Nazarick UV Tools",
+    "location": "UV Editor > Sidebar (N) > Nazarick UV Tools & 3D Viewport > Sidebar (N) > Nazarick UV Tools",
     "description": "Measures the ratio between UV space and 3D surface area (for Supreme Being Ainz Ooal Gown)",
     "category": "UV",
 }
@@ -61,12 +61,15 @@ class UV_OT_TotalUV3DRatio(bpy.types.Operator):
             
         uv_layer = bm.loops.layers.uv.active
         
-        # Calculate areas
+        # Calculate areas - prioritize selected faces, fallback to all faces
+        selected_faces = [face for face in bm.faces if face.select]
+        faces_to_process = selected_faces if selected_faces else bm.faces
+        
         total_3d = 0.0
         total_uv = 0.0
         face_count = 0
         
-        for face in bm.faces:
+        for face in faces_to_process:
             area_3d = face_area_3d(face)
             area_uv = face_area_uv(face, uv_layer)
             
@@ -93,9 +96,10 @@ class UV_OT_TotalUV3DRatio(bpy.types.Operator):
                 interpretation = "Good ratio (minor deviation)"
                 
             # Format result strings
+            scope = "selected faces" if selected_faces else "all faces"
             result = f"UV/3D Ratio: {ratio:.4f}"
             details = (f"Interpretation: {interpretation}\n"
-                      f"Calculated from {face_count} faces\n"
+                      f"Calculated from {face_count} {scope}\n"
                       f"3D Area: {total_3d:.4f} units²\n"
                       f"UV Area: {total_uv:.4f} units²\n"
                       f"Time: {(time.time() - start_time):.3f}s")
@@ -110,16 +114,11 @@ class UV_OT_TotalUV3DRatio(bpy.types.Operator):
             
         return {'FINISHED'}
 
-class UV_PT_NazarickRatioPanel(bpy.types.Panel):
-    bl_space_type = 'IMAGE_EDITOR'
-    bl_region_type = 'UI'
-    bl_category = "Nazarick UV Tools"
-    bl_label = "UV/3D Area Ratio"
-    bl_options = {'DEFAULT_CLOSED'}
-
-    def draw(self, context):
-        layout = self.layout
-        
+class NazarickRatioPanelMixin:
+    """Shared drawing logic for UV/3D ratio panels in both UV Editor and 3D Viewport"""
+    
+    def draw_ratio_panel(self, context, layout):
+        """Unified drawing method for consistent panel appearance"""
         col = layout.column(align=True)
         col.scale_y = 1.2
         col.operator(UV_OT_TotalUV3DRatio.bl_idname, icon='SHADERFX')
@@ -148,6 +147,33 @@ class UV_PT_NazarickRatioPanel(bpy.types.Panel):
                 box.label(text="UV Adjustment", icon='MODIFIER')
                 row = box.row(align=True)
                 row.operator("uv.nazarick_scale_uv_to_3d", text="Scale UVs to Match 3D").scale_factor = 1.0
+
+class UV_PT_NazarickRatioPanel(bpy.types.Panel, NazarickRatioPanelMixin):
+    """UV/3D Ratio panel for UV Editor"""
+    bl_space_type = 'IMAGE_EDITOR'
+    bl_region_type = 'UI'
+    bl_category = "Nazarick UV Tools"
+    bl_label = "UV/3D Area Ratio"
+    bl_options = {'DEFAULT_CLOSED'}
+
+    def draw(self, context):
+        self.draw_ratio_panel(context, self.layout)
+
+class VIEW3D_PT_NazarickRatioPanel(bpy.types.Panel, NazarickRatioPanelMixin):
+    """UV/3D Ratio panel for 3D Viewport - identical to UV Editor panel"""
+    bl_space_type = 'VIEW_3D'
+    bl_region_type = 'UI'
+    bl_category = "Nazarick UV Tools"
+    bl_label = "UV/3D Area Ratio"
+    bl_options = {'DEFAULT_CLOSED'}
+
+    @classmethod
+    def poll(cls, context):
+        # Only show when we have an active mesh object
+        return context.active_object and context.active_object.type == 'MESH'
+
+    def draw(self, context):
+        self.draw_ratio_panel(context, self.layout)
 
 class UV_OT_ScaleUVTo3D(bpy.types.Operator):
     bl_idname = "uv.nazarick_scale_uv_to_3d"
@@ -219,6 +245,7 @@ class UV_OT_ScaleUVTo3D(bpy.types.Operator):
 classes = (
     UV_OT_TotalUV3DRatio,
     UV_PT_NazarickRatioPanel,
+    VIEW3D_PT_NazarickRatioPanel,
     UV_OT_ScaleUVTo3D,
 )
 
