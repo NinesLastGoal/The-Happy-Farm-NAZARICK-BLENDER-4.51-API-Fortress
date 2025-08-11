@@ -1,12 +1,25 @@
 bl_info = {
     "name": "UV Total Ratio Compare",
-    "author": "Albedo, Guardian of the Great Tomb of Nazarick",
+    "author": "Albedo (Core Design) & Demiurge (Blender 4.5 Compatibility), Guardians of the Great Tomb of Nazarick",
     "version": (1, 0, 0),
     "blender": (4, 5, 0),
     "location": "UV Editor > Sidebar (N) > Nazarick UV Tools & 3D Viewport > Sidebar (N) > Nazarick UV Tools",
     "description": "Measures the ratio between UV space and 3D surface area (for Supreme Being Ainz Ooal Gown)",
     "category": "UV",
 }
+
+"""
+🏰 UV3D Ratio Addon for Blender 4.5 - Nazarick Edition 🏰
+
+Enhanced for Blender 4.5 compatibility with comprehensive testing suite.
+
+Contributors:
+- Albedo: Core addon functionality, dual-panel UI design, and mathematical calculations
+- Demiurge: Blender 4.5 API compatibility, comprehensive testing infrastructure, 
+           and deprecated API detection for the glory of the Great Tomb of Nazarick
+
+For Supreme Being Ainz Ooal Gown! ⚡
+"""
 
 import bpy
 import bmesh
