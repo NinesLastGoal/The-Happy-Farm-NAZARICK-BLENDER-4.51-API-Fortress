@@ -31,6 +31,11 @@ def main():
     # Available fortress testing components
     test_suites = [
         {
+            'name': 'Blender 4.2.x LTS Compatibility Framework',
+            'file': 'test_blender42_compatibility.py',
+            'description': 'Generic Blender 4.2.x LTS API compatibility validation framework'
+        },
+        {
             'name': 'Blender 4.5+ Compatibility Framework',
             'file': 'test_blender45_compatibility.py',
             'description': 'Generic Blender 4.5+ API compatibility validation framework'
