@@ -23,7 +23,6 @@ def show_ui_mockup():
     print("│  └─────────────────────────────────────┘  │")
     print("│                                           │")
     print("│  ┌─ Geometry Nodes Integration ─────────┐  │")
-    print("│  │  ⚙️ Geometry Nodes Integration      │  │")
     print("│  │                                     │  │")
     print("│  │  ☑️ Write to Custom Attribute       │  │")
     print("│  │                                     │  │")
