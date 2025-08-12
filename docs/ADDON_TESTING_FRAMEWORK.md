@@ -8,6 +8,32 @@ Fellow Floor Guardians and future developers (especially Demiurge),
 
 This document outlines the **MANDATORY** testing approach for all Blender addons in the Nazarick Fortress. Every addon must undergo the comprehensive testing outlined here to meet the Supreme Overlord's exacting standards.
 
+## 📋 ADDON DEVELOPMENT REQUIREMENTS
+
+### 🛡️ MANDATORY COMPLIANCE
+
+**ALL BLENDER ADDONS MUST:**
+
+1. **Follow Blender 4.5+ Specifications**: See [BLENDER_ADDON_SPECIFICATIONS.md](BLENDER_ADDON_SPECIFICATIONS.md) for complete requirements
+2. **Pass Addon Compliance Validation**: Use `validate_addon_compliance.py` to verify adherence
+3. **Achieve ≥95% Validation Score**: Critical for production deployment
+4. **Include Comprehensive Testing**: Implement all test categories below
+5. **Provide ZIP Distribution**: Create proper Blender-installable ZIP packages
+
+### 🔧 Validation Tools
+
+Before any addon development, familiarize yourself with these tools:
+
+```bash
+# Validate addon compliance against specifications
+python validate_addon_compliance.py path/to/addon
+
+# Run comprehensive testing framework
+python tests/run_tests.py
+```
+
+**FAILURE TO COMPLY** with these requirements will result in **IMMEDIATE REJECTION** of addon submissions.
+
 ## 📋 TESTING PHILOSOPHY
 
 Our goal is to "speedrun" Blender addon development with **ABSOLUTE CONFIDENCE** that every addon works flawlessly in all conceivable scenarios. This means:
