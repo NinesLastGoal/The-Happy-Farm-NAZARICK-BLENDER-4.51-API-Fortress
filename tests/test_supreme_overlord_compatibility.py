@@ -40,7 +40,7 @@ class SupremeOverlordTestSuite:
     
     def __init__(self):
         self.addons = {
-            'nazarick_stitch_tool': ADDON_DIR / "nazarick_stitch_tool.py",
+            'nazarick_stitch_tool': ADDON_DIR / "examples" / "stitch_tool" / "nazarick_stitch_tool.py",
             'shapekey_manager': ADDON_DIR / "shapekey_manager.py", 
             'uv_ratio_tool': ADDON_DIR / "uv_ratio_tool.py"
         }

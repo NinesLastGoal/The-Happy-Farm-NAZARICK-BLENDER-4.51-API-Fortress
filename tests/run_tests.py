@@ -31,9 +31,19 @@ def main():
     # Available fortress testing components
     test_suites = [
         {
+            'name': 'Comprehensive Addon Testing Framework',
+            'file': 'test_comprehensive_addon_framework.py',
+            'description': 'Extensible framework for testing all Blender addons with examples'
+        },
+        {
             'name': 'Primary Compatibility Fortress',
             'file': 'test_addon_blender45.py',
             'description': 'Main Blender 4.5+ API compatibility validation (8 tests)'
+        },
+        {
+            'name': 'Stitch Tool Validation',
+            'file': 'test_nazarick_stitch_tool.py',
+            'description': 'Legacy stitch tool structure and feature validation'
         },
         {
             'name': 'Ancient Realm Access Chamber', 
