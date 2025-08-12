@@ -221,7 +221,7 @@ class UV3D_PT_RatioPanel(bpy.types.Panel):
         # Main calculation button
         col = layout.column(align=True)
         col.scale_y = 1.2
-        col.operator("uv3d.calculate_ratio", icon='UV')
+        col.operator("uv3d_ratio.calculate", icon='UV')
         
         # Geometry Nodes integration toggle
         layout.separator()
