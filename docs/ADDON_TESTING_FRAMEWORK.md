@@ -31,10 +31,10 @@ Our goal is to "speedrun" Blender addon development with **ABSOLUTE CONFIDENCE**
 - **Mock Environment**: Comprehensive mocks for headless testing
 - **Auto-Detection**: Automatically falls back to mocks when bpy unavailable
 
-#### 2. `StitchToolTestFramework` 
-- **Purpose**: Comprehensive testing for the Nazarick Stitch Tool
-- **Template**: Serves as the blueprint for all future addon testing
-- **Coverage**: 49 individual test cases across 10 categories
+#### 2. `ComprehensiveAddonTestFramework` 
+- **Purpose**: Extensible framework for testing any Blender addon
+- **Template**: Provides blueprint for all future addon testing
+- **Example**: Includes stitch tool as demonstration of comprehensive testing
 
 #### 3. `ExtensibleTestFramework`
 - **Purpose**: Framework for testing multiple addons
@@ -119,7 +119,7 @@ class YourAddonTestFramework:
     """
     Comprehensive test framework for YourAddon
     
-    CRITICAL: Implement ALL test categories shown in StitchToolTestFramework
+    CRITICAL: Implement ALL test categories shown in ComprehensiveAddonTestFramework
     """
     
     def __init__(self, test_env: BlenderTestEnvironment):
@@ -241,7 +241,7 @@ def _test_no_active_object(self) -> bool:
 ### Run Individual Test Suite
 ```bash
 cd tests/
-python3 test_stitch_tool_user_simulation.py
+python3 test_comprehensive_addon_framework.py
 ```
 
 ### Run All Tests  
@@ -281,7 +281,7 @@ The framework automatically detects CI environments and uses mock Blender:
 ### Adding New Test Categories
 
 1. Identify new testing requirements
-2. Implement in StitchToolTestFramework first
+2. Implement in ComprehensiveAddonTestFramework first
 3. Document the new category
 4. Update this guide
 5. Ensure all addons implement the new category
@@ -297,7 +297,7 @@ The framework automatically detects CI environments and uses mock Blender:
 
 ### Complete Test Suite Template
 
-See `test_stitch_tool_user_simulation.py` for the definitive example of comprehensive addon testing. Every new addon test suite should follow this pattern exactly.
+See `test_comprehensive_addon_framework.py` for the definitive example of comprehensive addon testing. Every new addon test suite should follow this pattern exactly.
 
 ### Key Features Demonstrated
 

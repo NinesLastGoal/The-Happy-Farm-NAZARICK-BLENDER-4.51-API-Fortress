@@ -1,0 +1,1 @@
+# Stitch tool example addon package

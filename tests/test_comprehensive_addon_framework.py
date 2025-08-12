@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
-🏰⚡ NAZARICK STITCH TOOL USER SIMULATION TEST FRAMEWORK ⚡🏰
-================================================================
+🏰⚡ NAZARICK COMPREHENSIVE ADDON TESTING FRAMEWORK ⚡🏰
+=======================================================
 
 SUPREME OVERLORD'S AUTOMATED TESTING FORTRESS FOR BLENDER ADDONS
 ================================================================
 
-This comprehensive testing framework simulates real user interactions with the 
-Nazarick Stitch Tool addon in Blender 4.5+. It serves as the foundation for 
-testing all future Blender addons in the Nazarick Fortress.
+This comprehensive testing framework provides automated validation for all
+Blender addons in the Nazarick Fortress. It includes extensible test patterns
+for addon validation, user workflow simulation, and performance testing.
 
 🎯 TESTING PHILOSOPHY - CRITICAL FOR ALL FUTURE CONTRIBUTORS:
 ============================================================
@@ -296,7 +296,7 @@ class StitchToolTestFramework:
             # Import the addon module
             if self.env.use_real_blender:
                 # In real Blender, we can register the addon
-                from addons import nazarick_stitch_tool
+                from addons.examples.stitch_tool import nazarick_stitch_tool
                 self.addon_module = nazarick_stitch_tool
                 
                 # Register addon if not already registered
@@ -1142,24 +1142,24 @@ class ExtensibleTestFramework:
     Every new addon MUST implement equivalent comprehensive testing.
     """
     
-    def __init__(self):
-        self.test_env = BlenderTestEnvironment()
+    def __init__(self, test_env: BlenderTestEnvironment):
+        self.test_env = test_env
         self.registered_test_suites = {}
         
         logger.info("🔧 Extensible Test Framework initialized")
     
-    def register_addon_test_suite(self, addon_name: str, test_suite_class):
+    def register_addon_test(self, addon_name: str, test_suite):
         """
         Register a new addon test suite
         
         USAGE FOR FUTURE ADDONS:
-        framework.register_addon_test_suite("shapekey_manager", ShapekeyManagerTestSuite)
-        framework.register_addon_test_suite("uv_ratio_tool", UVRatioToolTestSuite)
+        framework.register_addon_test("shapekey_manager", ShapekeyManagerTestSuite(test_env))
+        framework.register_addon_test("uv_ratio_tool", UVRatioToolTestSuite(test_env))
         """
-        self.registered_test_suites[addon_name] = test_suite_class
+        self.registered_test_suites[addon_name] = test_suite
         logger.info(f"✅ Registered test suite for {addon_name}")
     
-    def run_all_addon_tests(self) -> Dict[str, Any]:
+    def run_all_tests(self) -> Dict[str, Any]:
         """Run tests for all registered addons"""
         overall_results = {
             'addons_tested': 0,
@@ -1169,11 +1169,10 @@ class ExtensibleTestFramework:
             'addon_results': {}
         }
         
-        for addon_name, test_suite_class in self.registered_test_suites.items():
+        for addon_name, test_suite in self.registered_test_suites.items():
             logger.info(f"🧪 Testing addon: {addon_name}")
             
             try:
-                test_suite = test_suite_class(self.test_env)
                 addon_results = test_suite.run_comprehensive_tests()
                 
                 overall_results['addon_results'][addon_name] = addon_results
@@ -1192,6 +1191,12 @@ class ExtensibleTestFramework:
                 }
                 overall_results['failed_tests'] += 1
         
+        # Calculate success rate
+        if overall_results['total_tests'] > 0:
+            overall_results['success_rate'] = (overall_results['passed_tests'] / overall_results['total_tests']) * 100
+        else:
+            overall_results['success_rate'] = 0
+        
         return overall_results
 
 
@@ -1202,7 +1207,7 @@ def main():
     This demonstrates the complete testing workflow that should be
     implemented for every Blender addon in the Nazarick Fortress.
     """
-    logger.info("🏰⚡ NAZARICK STITCH TOOL USER SIMULATION TEST SUITE ⚡🏰")
+    logger.info("🏰⚡ NAZARICK COMPREHENSIVE ADDON TESTING FRAMEWORK ⚡🏰")
     logger.info("=" * 80)
     logger.info("Supreme Overlord's Automated Testing Framework")
     logger.info("For the Eternal Glory of Nazarick! 🏰")
@@ -1212,12 +1217,16 @@ def main():
         # Initialize test environment
         test_env = BlenderTestEnvironment(use_real_blender=True)
         
-        # Initialize stitch tool test framework
+        # Initialize extensible addon test framework
+        addon_framework = ExtensibleTestFramework(test_env)
+        
+        # Register the stitch tool as one example addon test
         stitch_framework = StitchToolTestFramework(test_env)
+        addon_framework.register_addon_test("Stitch Tool", stitch_framework)
         
         # Run comprehensive tests
-        logger.info("🚀 Executing comprehensive test suite...")
-        results = stitch_framework.run_comprehensive_tests()
+        logger.info("🚀 Executing comprehensive addon test suite...")
+        results = addon_framework.run_all_tests()
         
         # Display results
         logger.info("\n" + "🏰" + "=" * 78 + "🏰")
@@ -1243,17 +1252,17 @@ def main():
         # Determine overall status
         if results['success_rate'] >= 95:
             logger.info("\n🏆 FORTRESS STATUS: SUPREMELY OPERATIONAL ⚡")
-            logger.info("🎉 Nazarick Stitch Tool meets the Supreme Overlord's standards!")
+            logger.info("🎉 All tested addons meet the Supreme Overlord's standards!")
             logger.info("🚀 Ready for production deployment in Blender 4.5+")
             logger.info("\n🏰 FOR THE ETERNAL GLORY OF NAZARICK! ⚡🏰")
             return True
         elif results['success_rate'] >= 80:
             logger.info("\n⚠️  FORTRESS STATUS: OPERATIONAL WITH CONCERNS")
-            logger.info("🔧 Most tests passed, but some issues require attention")
+            logger.info("🔧 Most tests passed, but some addons require attention")
             return False
         else:
             logger.info("\n🚨 FORTRESS STATUS: REQUIRES IMMEDIATE ATTENTION")
-            logger.info("💥 Critical issues found - deployment not recommended")
+            logger.info("💥 Critical issues found in addon testing - deployment not recommended")
             return False
     
     except Exception as e:
