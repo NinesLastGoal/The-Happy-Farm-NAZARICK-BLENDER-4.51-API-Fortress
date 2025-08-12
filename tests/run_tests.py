@@ -31,19 +31,14 @@ def main():
     # Available fortress testing components
     test_suites = [
         {
-            'name': 'Comprehensive Framework Testing',
-            'file': 'test_comprehensive_addon_framework.py',
-            'description': 'Extensible framework for testing any Blender addon compatibility'
-        },
-        {
             'name': 'Blender 4.5+ Compatibility Framework',
             'file': 'test_blender45_compatibility.py',
             'description': 'Generic Blender 4.5+ API compatibility validation framework'
         },
         {
-            'name': 'Real Environment Testing', 
-            'file': 'test_blender_real_environment.py',
-            'description': 'Real Blender 4.5+ environment compatibility testing'
+            'name': 'Real Environment Framework Testing', 
+            'file': 'test_real_environment.py',
+            'description': 'Generic real Blender environment framework validation'
         },
         {
             'name': 'Quick Validation Framework',
