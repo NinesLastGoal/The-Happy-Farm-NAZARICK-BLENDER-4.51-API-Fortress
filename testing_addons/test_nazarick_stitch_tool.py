@@ -22,7 +22,7 @@ from pathlib import Path
 def test_stitch_tool_syntax():
     """Test that the stitch tool has valid Python syntax"""
     try:
-        with open('../src/addons/examples/stitch_tool/nazarick_stitch_tool.py', 'r') as f:
+        with open('./examples/stitch_tool/nazarick_stitch_tool.py', 'r') as f:
             code = f.read()
         ast.parse(code)
         return True, "✅ Python syntax is valid"
@@ -34,7 +34,7 @@ def test_stitch_tool_syntax():
 def test_enhanced_features():
     """Test that enhanced features are implemented"""
     try:
-        with open('../src/addons/examples/stitch_tool/nazarick_stitch_tool.py', 'r') as f:
+        with open('./examples/stitch_tool/nazarick_stitch_tool.py', 'r') as f:
             content = f.read()
         
         checks = []
@@ -100,7 +100,7 @@ def test_enhanced_features():
 def test_error_handling():
     """Test that proper error handling is implemented"""
     try:
-        with open('../src/addons/examples/stitch_tool/nazarick_stitch_tool.py', 'r') as f:
+        with open('./examples/stitch_tool/nazarick_stitch_tool.py', 'r') as f:
             content = f.read()
         
         checks = []
@@ -140,7 +140,7 @@ def test_error_handling():
 def test_ui_enhancements():
     """Test that UI enhancements are properly implemented"""
     try:
-        with open('../src/addons/examples/stitch_tool/nazarick_stitch_tool.py', 'r') as f:
+        with open('./examples/stitch_tool/nazarick_stitch_tool.py', 'r') as f:
             content = f.read()
         
         checks = []
@@ -179,7 +179,7 @@ def test_ui_enhancements():
 def test_class_structure():
     """Test that all required classes are properly defined"""
     try:
-        with open('../src/addons/examples/stitch_tool/nazarick_stitch_tool.py', 'r') as f:
+        with open('./examples/stitch_tool/nazarick_stitch_tool.py', 'r') as f:
             content = f.read()
         
         checks = []
@@ -221,7 +221,7 @@ def test_class_structure():
 def test_blender_45_compatibility():
     """Test Blender 4.5+ compatibility"""
     try:
-        with open('../src/addons/examples/stitch_tool/nazarick_stitch_tool.py', 'r') as f:
+        with open('./examples/stitch_tool/nazarick_stitch_tool.py', 'r') as f:
             content = f.read()
         
         checks = []
