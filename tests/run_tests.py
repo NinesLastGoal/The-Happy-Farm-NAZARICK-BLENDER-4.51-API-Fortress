@@ -36,14 +36,9 @@ def main():
             'description': 'Extensible framework for testing any Blender addon compatibility'
         },
         {
-            'name': 'Primary Compatibility Validation',
-            'file': 'test_addon_blender45.py',
-            'description': 'Main Blender 4.5+ API compatibility validation framework'
-        },
-        {
-            'name': 'Legacy Tool Validation',
-            'file': 'test_nazarick_stitch_tool.py',
-            'description': 'Legacy test structure validation (addon-specific, to be sanitized)'
+            'name': 'Blender 4.5+ Compatibility Framework',
+            'file': 'test_blender45_compatibility.py',
+            'description': 'Generic Blender 4.5+ API compatibility validation framework'
         },
         {
             'name': 'Real Environment Testing', 
@@ -54,11 +49,6 @@ def main():
             'name': 'Quick Validation Framework',
             'file': 'test_simple_validation.py', 
             'description': 'Rapid generic compatibility verification'
-        },
-        {
-            'name': 'Advanced Testing Framework',
-            'file': 'test_uv_addon.py',
-            'description': 'Comprehensive addon testing with generic mocking (to be sanitized)'
         }
     ]
     
