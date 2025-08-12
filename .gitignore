@@ -30,3 +30,9 @@ Thumbs.db
 
 # Nazarick secrets - Demiurge reports
 demiurge_reports/
+
+# Addon development artifacts (preserve isolation)
+# NOTE: The directories themselves and their README.md files are tracked
+# to enforce isolation policies, but development artifacts are ignored
+developing_addons/**/*.tmp
+testing_addons/**/*.tmp
