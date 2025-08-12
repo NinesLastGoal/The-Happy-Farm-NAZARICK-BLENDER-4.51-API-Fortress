@@ -235,7 +235,6 @@ def test_code_quality():
         else:
             print("   ❌ No panel classes found")
             return False
-        
         # Check for register/unregister functions
         functions = [node.name for node in ast.walk(tree) if isinstance(node, ast.FunctionDef)]
         
