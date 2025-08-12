@@ -237,7 +237,7 @@ class UV3D_PT_RatioPanel(bpy.types.Panel):
             sub.label(text="Type: Float (per face)")
         
         # Display results if available
-        if hasattr(scene, 'uv3d_ratio_value') and scene.uv3d_ratio_value > 0:
+        if scene.uv3d_ratio_value > 0:
             layout.separator()
             
             # Results box
