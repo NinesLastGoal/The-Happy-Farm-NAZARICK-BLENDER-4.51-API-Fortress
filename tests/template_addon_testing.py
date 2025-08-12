@@ -62,7 +62,13 @@ class ExampleAddonTestFramework:
             if self.env.use_real_blender:
                 # CHANGE THIS: Replace with your addon import
                 # from addons import your_addon_name  
-                # self.addon_module = your_addon_name
+                # Example with error handling:
+                # try:
+                #     from addons import your_addon_name
+                #     self.addon_module = your_addon_name
+                # except ImportError as import_err:
+                #     print(f"❌ Could not import your_addon_name: {import_err}")
+                #     raise
                 pass
             else:
                 # Create mock addon for your specific addon structure
