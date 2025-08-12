@@ -31,9 +31,19 @@ def main():
     # Available fortress testing components
     test_suites = [
         {
+            'name': 'Supreme Overlord User Simulation',
+            'file': 'test_stitch_tool_user_simulation.py',
+            'description': 'Comprehensive user workflow simulation for Nazarick Stitch Tool'
+        },
+        {
             'name': 'Primary Compatibility Fortress',
             'file': 'test_addon_blender45.py',
             'description': 'Main Blender 4.5+ API compatibility validation (8 tests)'
+        },
+        {
+            'name': 'Enhanced Stitch Tool Validation',
+            'file': 'test_nazarick_stitch_tool.py',
+            'description': 'Stitch tool structure and feature validation'
         },
         {
             'name': 'Ancient Realm Access Chamber', 
