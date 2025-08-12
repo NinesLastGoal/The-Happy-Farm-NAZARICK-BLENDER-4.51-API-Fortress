@@ -31,34 +31,19 @@ def main():
     # Available fortress testing components
     test_suites = [
         {
-            'name': 'Comprehensive Addon Testing Framework',
-            'file': 'test_comprehensive_addon_framework.py',
-            'description': 'Extensible framework for testing all Blender addons with examples'
+            'name': 'Blender 4.5+ Compatibility Framework',
+            'file': 'test_blender45_compatibility.py',
+            'description': 'Generic Blender 4.5+ API compatibility validation framework'
         },
         {
-            'name': 'Primary Compatibility Fortress',
-            'file': 'test_addon_blender45.py',
-            'description': 'Main Blender 4.5+ API compatibility validation (8 tests)'
+            'name': 'Real Environment Framework Testing', 
+            'file': 'test_real_environment.py',
+            'description': 'Generic real Blender environment framework validation'
         },
         {
-            'name': 'Stitch Tool Validation',
-            'file': 'test_nazarick_stitch_tool.py',
-            'description': 'Legacy stitch tool structure and feature validation'
-        },
-        {
-            'name': 'Ancient Realm Access Chamber', 
-            'file': 'test_blender_real_environment.py',
-            'description': 'Real Blender 4.5.1 environment testing'
-        },
-        {
-            'name': 'Quick Strike Validation',
+            'name': 'Quick Validation Framework',
             'file': 'test_simple_validation.py', 
-            'description': 'Rapid fortress functionality verification'
-        },
-        {
-            'name': 'Advanced Comprehensive Citadel',
-            'file': 'test_uv_addon.py',
-            'description': 'Comprehensive addon testing with mocking'
+            'description': 'Rapid generic compatibility verification'
         }
     ]
     
