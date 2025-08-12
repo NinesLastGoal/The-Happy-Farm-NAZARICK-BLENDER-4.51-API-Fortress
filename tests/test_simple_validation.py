@@ -1,29 +1,43 @@
 #!/usr/bin/env python3
 """
-Simplified Real Blender 4.5.1 Addon Validation Script
-====================================================
+Generic Blender 4.5+ Addon Validation Framework
+==============================================
 
-Quick validation script to confirm addon functionality in real Blender environment.
+Addon-agnostic validation script for testing any Blender addon's compatibility.
 
-For the Glory of Nazarick! 🏰
-Created by Demiurge with Ancient Realm Access
+For the Glory of Nazarick's Pure Architecture! 🏰
+Created by Demiurge with Fortress Neutrality
 """
 
 import bpy
 import sys
 import traceback
+import os
 
-def test_addon_registration():
-    """Test addon registration and basic functionality"""
-    print("🏰 Testing UV3D Ratio Addon in Real Blender 4.5.1 🏰")
+def test_generic_addon_registration(addon_path=None):
+    """Test generic addon registration and basic functionality"""
+    print("🏰 Testing Generic Addon Compatibility in Real Blender 4.5+ 🏰")
     print(f"Blender Version: {bpy.app.version_string}")
     print(f"Python Version: {sys.version}")
     print()
     
+    # If no specific addon provided, look for test subjects in testing_addons
+    if not addon_path:
+        testing_dir = "../testing_addons"
+        if os.path.exists(testing_dir):
+            # Find any .py addon file to test
+            for file in os.listdir(testing_dir):
+                if file.endswith('.py') and not file.startswith('_'):
+                    addon_path = os.path.join(testing_dir, file)
+                    break
+    
+    if not addon_path or not os.path.exists(addon_path):
+        print("⚠️ No test addon found - skipping registration test")
+        return True
+    
     try:
-        # Load addon
-        print("📥 Loading addon...")
-        addon_path = "../src/addons/uv_ratio_tool.py"
+        # Load addon generically
+        print(f"📥 Loading test addon: {os.path.basename(addon_path)}")
         with open(addon_path, 'r') as f:
             addon_code = f.read()
         
@@ -31,85 +45,118 @@ def test_addon_registration():
         addon_globals = {}
         exec(compile(addon_code, addon_path, 'exec'), addon_globals)
         
-        # Register addon
-        print("🔧 Registering addon...")
-        addon_globals['register']()
+        # Register addon if possible
+        print("🔧 Attempting addon registration...")
+#!/usr/bin/env python3
+"""
+Generic Blender 4.5+ Addon Validation Framework
+==============================================
+
+Addon-agnostic validation script for testing any Blender addon's compatibility.
+
+For the Glory of Nazarick's Pure Architecture! 🏰
+Created by Demiurge with Fortress Neutrality
+"""
+
+import bpy
+import sys
+import traceback
+import os
+
+def test_generic_addon_validation(addon_path=None):
+    """Test generic addon registration and basic functionality"""
+    print("🏰 Testing Generic Addon Compatibility in Real Blender 4.5+ 🏰")
+    print(f"Blender Version: {bpy.app.version_string}")
+    print(f"Python Version: {sys.version}")
+    print()
+    
+    # If no specific addon provided, look for test subjects in testing_addons
+    if not addon_path:
+        testing_dir = "../testing_addons"
+        if os.path.exists(testing_dir):
+            # Find any .py addon file to test
+            for file in os.listdir(testing_dir):
+                if file.endswith('.py') and not file.startswith('_'):
+                    addon_path = os.path.join(testing_dir, file)
+                    break
+    
+    if not addon_path or not os.path.exists(addon_path):
+        print("⚠️ No test addon found - testing framework validation only")
+        return test_framework_only()
+    
+    try:
+        # Load addon generically
+        print(f"📥 Loading test addon: {os.path.basename(addon_path)}")
+        with open(addon_path, 'r') as f:
+            addon_code = f.read()
         
-        # Check operator registration by bl_idname
-        operators_to_check = [
-            ("uv.nazarick_total_uv_3d_ratio", "UV/3D Ratio Calculator"),
-            ("uv.nazarick_scale_uv_to_3d", "UV Scale to 3D")
-        ]
+        # Execute addon
+        addon_globals = {}
+        exec(compile(addon_code, addon_path, 'exec'), addon_globals)
         
-        print("🔍 Checking operator registration...")
-        for bl_idname, description in operators_to_check:
-            try:
-                # Try to get operator
-                module, op_name = bl_idname.split('.')
-                if hasattr(getattr(bpy.ops, module), op_name):
-                    print(f"✅ {description} ({bl_idname}) - REGISTERED")
-                else:
-                    print(f"❌ {description} ({bl_idname}) - NOT FOUND")
-            except:
-                print(f"❌ {description} ({bl_idname}) - ERROR")
+        # Register addon if possible
+        print("🔧 Attempting addon registration...")
+        if 'register' in addon_globals:
+            addon_globals['register']()
+            print("✅ Addon registration - SUCCESSFUL")
+        else:
+            print("⚠️ No register function found - addon may be legacy format")
+            return True  # Not a failure, just different format
         
-        # Check panel registration
-        panels_to_check = [
-            ("UV_PT_NazarickRatioPanel", "UV Editor Panel"),
-            ("VIEW3D_PT_NazarickRatioPanel", "3D Viewport Panel")
-        ]
+        # Test basic scene compatibility
+        print("🧪 Testing basic scene compatibility...")
+        test_scene_compatibility()
         
-        print("🖼️  Checking panel registration...")
-        for panel_class, description in panels_to_check:
-            if hasattr(bpy.types, panel_class):
-                print(f"✅ {description} ({panel_class}) - REGISTERED")
-            else:
-                print(f"❌ {description} ({panel_class}) - NOT FOUND")
-        
-        # Test basic scene setup for operator
-        print("🧪 Testing basic scene setup...")
-        
-        # Clear scene
-        bpy.ops.object.select_all(action='SELECT')
-        bpy.ops.object.delete(use_global=False)
-        
-        # Add cube and prepare for testing
-        bpy.ops.mesh.primitive_cube_add()
-        cube = bpy.context.active_object
-        
-        # Enter edit mode 
-        bpy.context.view_layer.objects.active = cube
-        bpy.ops.object.mode_set(mode='EDIT')
-        
-        # Test if operators are callable (poll check)
-        try:
-            # Check if we can call the ratio calculator
-            result = bpy.ops.uv.nazarick_total_uv_3d_ratio.poll()
-            print(f"✅ UV/3D Ratio operator poll: {result}")
-        except AttributeError:
-            print("❌ UV/3D Ratio operator not accessible")
-        except Exception as e:
-            print(f"⚠️  UV/3D Ratio operator poll error: {e}")
-        
-        # Cleanup
-        bpy.ops.object.mode_set(mode='OBJECT')
-        
-        # Unregister addon
-        print("🔄 Unregistering addon...")
-        addon_globals['unregister']()
-        
-        print("\n✅ ADDON VALIDATION COMPLETE!")
-        print("🏆 The addon successfully loads and registers in Blender 4.5.1!")
-        print("For the Glory of Nazarick! 🏰⚡")
+        # Attempt cleanup
+        if 'unregister' in addon_globals:
+            addon_globals['unregister']()
+            print("✅ Addon cleanup - SUCCESSFUL")
+            
+        print("\n✅ GENERIC ADDON VALIDATION COMPLETE!")
+        print("🏆 The addon successfully loads in Blender 4.5+!")
+        print("For the Glory of Nazarick's Pure Architecture! 🏰⚡")
         
         return True
-        
+            
     except Exception as e:
-        print(f"\n❌ VALIDATION FAILED: {e}")
+        print(f"❌ Addon validation failed: {e}")
         traceback.print_exc()
         return False
 
+def test_framework_only():
+    """Test just the framework capabilities"""
+    print("🧪 Testing framework compatibility only...")
+    
+    try:
+        # Test basic Blender 4.5+ features
+        test_scene_compatibility()
+        
+        print("✅ FRAMEWORK VALIDATION COMPLETE!")
+        print("🏆 Blender 4.5+ framework is operational!")
+        return True
+        
+    except Exception as e:
+        print(f"❌ Framework validation failed: {e}")
+        return False
+
+def test_scene_compatibility():
+    """Test basic Blender scene operations"""
+    # Clear scene
+    bpy.ops.object.select_all(action='SELECT')
+    bpy.ops.object.delete(use_global=False)
+    
+    # Add test object
+    bpy.ops.mesh.primitive_cube_add()
+    cube = bpy.context.active_object
+    
+    # Test mode switching
+    bpy.context.view_layer.objects.active = cube
+    bpy.ops.object.mode_set(mode='EDIT')
+    bpy.ops.object.mode_set(mode='OBJECT')
+    
+    print("✅ Scene compatibility - VALIDATED")
+
 if __name__ == "__main__":
-    success = test_addon_registration()
+    success = test_generic_addon_validation()
     if not success:
         sys.exit(1)

@@ -31,34 +31,34 @@ def main():
     # Available fortress testing components
     test_suites = [
         {
-            'name': 'Comprehensive Addon Testing Framework',
+            'name': 'Comprehensive Framework Testing',
             'file': 'test_comprehensive_addon_framework.py',
-            'description': 'Extensible framework for testing all Blender addons with examples'
+            'description': 'Extensible framework for testing any Blender addon compatibility'
         },
         {
-            'name': 'Primary Compatibility Fortress',
+            'name': 'Primary Compatibility Validation',
             'file': 'test_addon_blender45.py',
-            'description': 'Main Blender 4.5+ API compatibility validation (8 tests)'
+            'description': 'Main Blender 4.5+ API compatibility validation framework'
         },
         {
-            'name': 'Stitch Tool Validation',
+            'name': 'Legacy Tool Validation',
             'file': 'test_nazarick_stitch_tool.py',
-            'description': 'Legacy stitch tool structure and feature validation'
+            'description': 'Legacy test structure validation (addon-specific, to be sanitized)'
         },
         {
-            'name': 'Ancient Realm Access Chamber', 
+            'name': 'Real Environment Testing', 
             'file': 'test_blender_real_environment.py',
-            'description': 'Real Blender 4.5.1 environment testing'
+            'description': 'Real Blender 4.5+ environment compatibility testing'
         },
         {
-            'name': 'Quick Strike Validation',
+            'name': 'Quick Validation Framework',
             'file': 'test_simple_validation.py', 
-            'description': 'Rapid fortress functionality verification'
+            'description': 'Rapid generic compatibility verification'
         },
         {
-            'name': 'Advanced Comprehensive Citadel',
+            'name': 'Advanced Testing Framework',
             'file': 'test_uv_addon.py',
-            'description': 'Comprehensive addon testing with mocking'
+            'description': 'Comprehensive addon testing with generic mocking (to be sanitized)'
         }
     ]
     
