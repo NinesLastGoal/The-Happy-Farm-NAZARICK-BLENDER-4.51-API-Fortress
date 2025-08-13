@@ -4,7 +4,7 @@ bl_info = {
     "version": (1, 0, 0),
     "blender": (4, 2, 0),
     "location": "UV Editor > Sidebar (N) > UV Tools & 3D Viewport > Sidebar (N) > UV Tools",
-    "description": "Measures and compares UV space area to 3D surface area for optimal texture mapping",
+    "description": "Measures UV area to 3D area ratios (UV÷3D). Ratio >1 = stretched, <1 = compressed, ≈1 = optimal",
     "category": "UV",
     "doc_url": "",
     "tracker_url": "",
@@ -15,13 +15,18 @@ bl_info = {
 UV/3D Area Ratio Tool for Blender 4.2.x LTS
 ==========================================
 
-A streamlined, production-ready addon that measures the ratio between UV space 
-and 3D surface area to help optimize texture mapping and identify UV stretching
-or compression issues.
+A streamlined, production-ready addon that calculates the ratio of UV space 
+area to 3D surface area (UV Area ÷ 3D Area) to help optimize texture mapping 
+and identify UV stretching or compression issues.
+
+Ratio Interpretation:
+- Ratio > 1.0: UVs are STRETCHED (UV area larger than 3D area)
+- Ratio < 1.0: UVs are COMPRESSED (UV area smaller than 3D area)  
+- Ratio ≈ 1.0: OPTIMAL mapping (UV area matches 3D area)
 
 Features:
 - Calculate UV to 3D area ratios for selected faces or entire mesh
-- Visual feedback with interpretation of ratio values
+- Clear visual feedback with interpretation of ratio values
 - One-click UV scaling to achieve optimal 1:1 ratio
 - Dual-panel interface (UV Editor and 3D Viewport)
 - Robust error handling and validation
@@ -109,7 +114,8 @@ class UV_OT_CalculateRatio(bpy.types.Operator):
     """Calculate the ratio between UV area and 3D surface area"""
     bl_idname = "uv.calculate_uv_3d_ratio"
     bl_label = "Calculate UV/3D Ratio"
-    bl_description = "Analyze the ratio between UV space and 3D surface area"
+    bl_description = ("Calculate UV Area ÷ 3D Area ratio. "
+                     "Ratio > 1.0 = Stretched UVs, Ratio < 1.0 = Compressed UVs, Ratio ≈ 1.0 = Optimal mapping")
     bl_options = {'REGISTER', 'UNDO'}
 
     @classmethod
@@ -273,7 +279,8 @@ class UV_OT_ScaleToOptimal(bpy.types.Operator):
     """Scale UVs to achieve optimal 1:1 ratio with 3D surface"""
     bl_idname = "uv.scale_uv_to_optimal"
     bl_label = "Scale UVs to Optimal Ratio"
-    bl_description = "Scale UV coordinates to achieve a 1:1 ratio with 3D surface area"
+    bl_description = ("Scale UV coordinates to achieve a 1:1 ratio (UV Area = 3D Area). "
+                     "This provides optimal texture mapping without stretching or compression")
     bl_options = {'REGISTER', 'UNDO'}
 
     @classmethod
@@ -351,7 +358,19 @@ class UVRatioPanel:
         """Draw the main panel content"""
         column = layout.column(align=True)
         
+        # Add explanation text about ratio calculation
+        info_box = layout.box()
+        info_column = info_box.column(align=True)
+        info_column.label(text="UV/3D Ratio Analysis:", icon='INFO')
+        info_column.label(text="• Ratio > 1.0: UVs are stretched")
+        info_column.label(text="• Ratio < 1.0: UVs are compressed") 
+        info_column.label(text="• Ratio ≈ 1.0: Optimal mapping")
+        info_column.label(text="Formula: UV Area ÷ 3D Area")
+        
+        layout.separator()
+        
         # Main calculation button
+        column = layout.column(align=True)
         column.scale_y = 1.3
         column.operator("uv.calculate_uv_3d_ratio", icon='SHADERFX')
         
@@ -396,7 +415,7 @@ class UV_PT_RatioPanel(bpy.types.Panel, UVRatioPanel):
     bl_space_type = 'IMAGE_EDITOR'
     bl_region_type = 'UI'
     bl_category = "UV"
-    bl_label = "UV/3D Area Ratio"
+    bl_label = "UV/3D Area Ratio Tool"
     bl_options = {'DEFAULT_CLOSED'}
 
     def draw(self, context):
@@ -409,7 +428,7 @@ class VIEW3D_PT_RatioPanel(bpy.types.Panel, UVRatioPanel):
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
     bl_category = "UV"
-    bl_label = "UV/3D Area Ratio"
+    bl_label = "UV/3D Area Ratio Tool"
     bl_options = {'DEFAULT_CLOSED'}
 
     @classmethod
@@ -440,19 +459,19 @@ def register():
     # Scene properties for storing results
     bpy.types.Scene.uv_ratio_result = bpy.props.StringProperty(
         name="UV/3D Ratio Result",
-        description="Main result of UV/3D area ratio calculation",
+        description="UV Area ÷ 3D Area ratio result. Values >1 indicate stretching, <1 indicate compression",
         default=""
     )
     
     bpy.types.Scene.uv_ratio_details = bpy.props.StringProperty(
         name="UV/3D Ratio Details",
-        description="Detailed information about the UV/3D ratio calculation",
+        description="Detailed information about the UV/3D area ratio calculation and interpretation",
         default=""
     )
     
     bpy.types.Scene.uv_ratio_value = bpy.props.FloatProperty(
         name="UV/3D Ratio Value",
-        description="Numerical ratio value for internal calculations",
+        description="Numerical ratio value (UV Area ÷ 3D Area) for internal calculations and optimization",
         default=1.0,
         min=0.0
     )

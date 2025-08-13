@@ -228,6 +228,12 @@ class TestMathematicalFunctions(unittest.TestCase):
         # Execute the mathematical functions in isolated namespace
         try:
             exec(content, test_namespace)
+            # If successful, extract the functions from the namespace
+            self.calculate_face_area_3d = test_namespace.get('calculate_face_area_3d')
+            self.calculate_face_area_uv = test_namespace.get('calculate_face_area_uv')
+        except Exception as e:
+            # If full execution fails, extract just the math functions
+            self._extract_math_functions(content)
     
     def _extract_math_functions(self, content):
         """Extract just the mathematical functions for testing"""
@@ -272,9 +278,6 @@ class TestMathematicalFunctions(unittest.TestCase):
         namespace_uv = {'Vector': MockVector, 'math': math}
         exec('\n'.join(func_lines), namespace_uv)
         self.calculate_face_area_uv = namespace_uv['calculate_face_area_uv']
-        except Exception as e:
-            # If full execution fails, extract just the math functions
-            self._extract_math_functions(content)
     
     def test_triangle_3d_area_calculation(self):
         """Test 3D area calculation for a right triangle"""
