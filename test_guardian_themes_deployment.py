@@ -13,6 +13,21 @@ import sys
 import json
 from pathlib import Path
 
+# File size validation constants
+MIN_ADDON_FILE_SIZE = 25000  # Minimum size for substantial addon content
+MIN_README_FILE_SIZE = 8000  # Minimum size for comprehensive documentation
+
+# Blender version requirements
+BLENDER_MIN_VERSION = (4, 5, 0)  # Minimum Blender version for addon
+ADDON_VERSION = (1, 0, 0)  # Current addon version
+
+# Performance requirements
+MAX_THEME_SWITCH_TIME = 1  # Maximum time in seconds for theme switching
+
+# Test count tracking
+EXPECTED_GUARDIAN_COUNT = 8  # Number of Guardian themes that must be implemented
+EXPECTED_PALETTE_ATTRIBUTES = 7  # Number of required palette attributes
+
 class GuardianThemeDeploymentValidator:
     """Comprehensive validation for Guardian Theme Switcher deployment"""
     
@@ -26,8 +41,8 @@ class GuardianThemeDeploymentValidator:
         tests = [
             (self.addon_path.exists(), "Addon file exists"),
             (self.readme_path.exists(), "README file exists"),
-            (self.addon_path.stat().st_size > 25000, "Addon file has substantial content"),
-            (self.readme_path.stat().st_size > 8000, "README has comprehensive documentation"),
+            (self.addon_path.stat().st_size > MIN_ADDON_FILE_SIZE, "Addon file has substantial content"),
+            (self.readme_path.stat().st_size > MIN_README_FILE_SIZE, "README has comprehensive documentation"),
         ]
         
         return self._process_tests("File Structure", tests)
@@ -64,10 +79,10 @@ class GuardianThemeDeploymentValidator:
             tests = [
                 ('bl_info = {' in content, "bl_info dictionary present"),
                 ('"name": "Nazarick Guardian Theme Switcher"' in content, "Correct addon name"),
-                ('"blender": (4, 5, 0)' in content, "Blender 4.5+ requirement"),
+                (f'"blender": {BLENDER_MIN_VERSION}' in content, f"Blender {BLENDER_MIN_VERSION[0]}.{BLENDER_MIN_VERSION[1]}+ requirement"),
                 ('"category": "User Interface"' in content, "Appropriate category"),
                 ('"author":' in content and 'Guardian Alliance' in content, "Guardian Alliance authorship"),
-                ('"version": (1, 0, 0)' in content, "Version tuple format"),
+                (f'"version": {ADDON_VERSION}' in content, "Version tuple format"),
                 ('"support": "COMMUNITY"' in content, "Community support level"),
             ]
             
@@ -85,6 +100,9 @@ class GuardianThemeDeploymentValidator:
             
             guardians = ['ALBEDO', 'SHALLTEAR', 'COCYTUS', 'AURA', 'MARE', 'DEMIURGE', 'VICTIM', 'NAZARICK_CORE']
             
+            # Verify we have the expected number of guardians
+            assert len(guardians) == EXPECTED_GUARDIAN_COUNT, f"Expected {EXPECTED_GUARDIAN_COUNT} guardians, found {len(guardians)}"
+            
             tests = [
                 ('class NazarickGuardianPalettes:' in content, "Guardian palettes class"),
             ]
@@ -94,6 +112,10 @@ class GuardianThemeDeploymentValidator:
             
             # Check palette structure
             palette_attributes = ['primary', 'secondary', 'accent', 'selection', 'background', 'text', 'grid']
+            
+            # Verify we have the expected number of palette attributes
+            assert len(palette_attributes) == EXPECTED_PALETTE_ATTRIBUTES, f"Expected {EXPECTED_PALETTE_ATTRIBUTES} palette attributes, found {len(palette_attributes)}"
+            
             for attr in palette_attributes:
                 tests.append((f'"{attr}":' in content, f"Palette {attr} attribute"))
             
@@ -264,21 +286,21 @@ class GuardianThemeDeploymentValidator:
     
     def generate_deployment_checklist(self):
         """Generate deployment checklist"""
-        checklist = """
+        checklist = f"""
 🏰⚡ NAZARICK GUARDIAN THEME SWITCHER - DEPLOYMENT CHECKLIST ⚡🏰
 
 📋 PRE-DEPLOYMENT VALIDATION:
 □ All validation tests pass
 □ Python syntax validated 
 □ bl_info metadata complete
-□ All 8 Guardian themes implemented
+□ All {EXPECTED_GUARDIAN_COUNT} Guardian themes implemented
 □ Theme management system functional
 □ UI panel and operators complete
 □ Error handling comprehensive
 □ Documentation complete
 
 📦 INSTALLATION TESTING:
-□ Clean Blender 4.5+ installation test
+□ Clean Blender {BLENDER_MIN_VERSION[0]}.{BLENDER_MIN_VERSION[1]}+ installation test
 □ Addon loads without errors
 □ UI panel appears in Nazarick tab
 □ All Guardian themes selectable
@@ -298,7 +320,7 @@ class GuardianThemeDeploymentValidator:
 □ Nazarick Core theme applies correctly
 
 🔄 WORKFLOW TESTING:
-□ Theme switching is responsive (<1 second)
+□ Theme switching is responsive (< {MAX_THEME_SWITCH_TIME} second)
 □ Auto-apply functionality works
 □ Manual apply button works
 □ Restore button works correctly
